@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Yql{% endblock %} 
+{% block body %}
+{% if queries %}
+<form method="get" action="" name="queries">
+<ul>
+  {% for query in queries %}
+  <li><input type="radio" value="{{ query.id }}" name="query"/>{{ query }}</li>
+  {% endfor %}
+</ul>
+<input type="text" name="text"/>
+<input type="submit"/>
+</form>
+{% endif %}
+{% if result %}
+{{ result }}
+{% endif %}
+{% endblock %}
