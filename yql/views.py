@@ -11,7 +11,12 @@ def queries(request):
         query_text = request.GET.get('text', None)
         if query_id and query_text:
             query = YqlQuery.objects.get(id=query_id)
-            response = yahoo.yql.YQLQuery().execute(query.query % (query.table.name, query_text))
+            params = query.table.params.all()
+            yql = query.query
+            if params:
+                for param in params:
+                    yql += ' and %s=\'%s\'' % (param.name, param.value)
+            response = yahoo.yql.YQLQuery().execute(yql % (query.table.name, query_text))
             if 'query' in response and 'results' in response['query']:
                 context_vars['result'] = response['query']['results']
             elif 'error' in response:
