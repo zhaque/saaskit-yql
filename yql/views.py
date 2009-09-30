@@ -1,6 +1,7 @@
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
-from yql.models import YqlTable, YqlQuery#, YqlSearch
+from yql.models import YqlTable, YqlQuery
+import yahoo.yql
 
 def queries(request):
     context_vars = dict()
@@ -10,7 +11,11 @@ def queries(request):
         query_text = request.GET.get('text', None)
         if query_id and query_text:
             query = YqlQuery.objects.get(id=query_id)
-#            search_obj = YqlSearch()
-#            search_obj.init_options()
-#            context_vars['result'] = search_obj.fetch(query.query % (query.table.name, query_text))
+            response = yahoo.yql.YQLQuery().execute(query.query % (query.table.name, query_text))
+            if 'query' in response and 'results' in response['query']:
+                context_vars['result'] = response['query']['results']
+            elif 'error' in response:
+                context_vars['result'] = 'YQL query failed with error: "%s".' % response['error']['description']
+            else:
+                context_vars['result'] = 'YQL response malformed.'
     return direct_to_template(request, template="yql/queries.html", extra_context=context_vars)
