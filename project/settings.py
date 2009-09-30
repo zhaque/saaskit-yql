@@ -81,3 +81,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'yql',
 )
+
+# Yahoo OAuth
+CONSUMER_KEY      = '##'
+CONSUMER_SECRET   = '##'
+APPLICATION_ID    = '##'
+CALLBACK_URL      = '##'
