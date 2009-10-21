@@ -46,18 +46,31 @@ class SimpleYqlSearch(YqlSearch):
 
     yql = 'select * from %s where %s=\'%s\''
     queryname = 'query'
+    count = 10
+    offset = 0
 
     def set_yql(self, yql):
         self.yql = yql
 
     def set_table(self, table):
-        self.table = table
+        self.table = table + '(0)'
+
+    def set_count(self, count):
+        self.count = count
+
+    def set_offset(self, offset):
+        self.offset = offset
 
     def set_queryname(self, queryname):
         self.queryname = queryname
 
     def raw_fetch(self, query, oauth=False):
         yql_query = self.yql % (self.table, self.queryname, query)
+        if self.count:
+            yql_query += ' limit %s' % self.count
+        if self.offset:
+            yql_query += ' offset %s' % self.offset
+        yql_query += '|sort(field="updated",descending="true")'
         return super(SimpleYqlSearch, self).raw_fetch(yql_query, oauth)
 
 
