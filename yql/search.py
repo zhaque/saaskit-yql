@@ -1,4 +1,4 @@
-class BaseSearch:
+class BaseSearch(object):
     # override it for custom fetch
     def raw_fetch(self, query, *args, **kwargs):
         pass
@@ -37,4 +37,27 @@ class YqlSearch(BaseSearch):
         else:
             res.update({'errors':('YQL response malformed.',)})
         return res
+
+class SimpleYqlSearch(YqlSearch):
+    """
+    SimpleYqlSearch class provides yql search using YqlSearch but using simple query string like 'django'
+    set_table fucntion MUST be run before first fetch.
+    """
+
+    yql = 'select * from %s where %s=\'%s\''
+    queryname = 'query'
+
+    def set_yql(self, yql):
+        self.yql = yql
+
+    def set_table(self, table):
+        self.table = table
+
+    def set_queryname(self, queryname):
+        self.queryname = queryname
+
+    def raw_fetch(self, query, oauth=False):
+        yql_query = self.yql % (self.table, self.queryname, query)
+        return super(SimpleYqlSearch, self).raw_fetch(yql_query, oauth)
+
 
