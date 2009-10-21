@@ -1,0 +1,4 @@
+django-yql
+=================
+
+Django application that implements Yahoo Query Language search support. Based on yos-social-python project and requires it to be installed somewhere in your python path or inside django project.
