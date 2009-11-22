@@ -5,6 +5,11 @@ install_requires = [
         'Django',
         'yos_social_sdk',
 ]
+
+dependency_links = [
+        'http://pypi.saaskit.org/yos-social-sdk/',
+        'http://dist.repoze.org',
+]
  
 setup(name="saaskit-yql",
            version="0.1",
@@ -17,5 +22,5 @@ setup(name="saaskit-yql",
            entry_points="""
            # -*- Entry points: -*-
            """,
-           dependency_links = ['http://dist.repoze.org',],
+           dependency_links =  dependency_links,
 )
